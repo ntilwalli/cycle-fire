@@ -16,16 +16,8 @@ test("Basic functionality", t => {
     data: `Rando event name`
   })
   const FBase = driver(input$)
-
-  const response$ = FBase.response$
-    //.do(x => {console.log(`FBase.response$...`); console.log(x)})
-    .filter(x => x.method === `set`)
-    .flatMap(x => x.response$)
-    .subscribe(x => {
-      t.pass(`Schema updated with set method`)
-    })
-
   const root = FBase.select(`/`).select(`events/e424`).select(`/core/name`)
+
   //console.log(root)
   const rootValue = root.events('value').subscribe(
     x => {
@@ -33,6 +25,18 @@ test("Basic functionality", t => {
       t.equals(x.val(), `Rando event name`, `Has expected event name`)
     }
   )
+
+  //const response$ = FBase.response$
+  const response$ = root.isolated$
+    //.do(x => {console.log(`FBase.response$...`); console.log(x)})
+    .filter(x => x.method === `set`)
+    .flatMap(x => x.response$)
+    .subscribe(x => {
+      t.pass(`Schema updated with set method`)
+    })
+
+
+
 
   //t.end()
 

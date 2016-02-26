@@ -142,7 +142,7 @@ function makePush (baseRef, response$) {
     const path = namespace.join('/')
 
     return {
-      state: makeStateObject(response$, path, this.auth$, childRef, true),
+      context: makeContextObject(response$, path, this.auth$, childRef),
       observable: observer
     }
   }
@@ -171,18 +171,19 @@ function makeRefSelector(baseRef, response$) {
       childRef = baseRef.child(relPath)
     }
 
-    return makeStateObject(response$, path, this.auth$, childRef, true)
+    return makeContextObject(response$, path, this.auth$, childRef)
   }
 }
 
-function makeStateObject (response$, path, auth$, childRef, filterResponses) {
+function makeContextObject (response$, path, auth$, childRef, filterResponses) {
   return {
-    response$: filterResponses ? response$.filter(response => response.location === path) : response$,
     path,
     auth$: auth$,
     select: makeRefSelector(childRef, response$),
     events: makeEventsSelector(childRef),
-    setOutputLocation: request$ => request$.do(request => request.location = path),
+    response$,
+    isolate: request$ => request$.do(request => request.location = path),
+    isolated$: response$.filter(response => response.location === path),
     orderByChild: child => makeStateObject(
       response$,
       path,
@@ -259,7 +260,7 @@ function makeFirebaseDriver (urlOrRef) {
   return function firebaseDriver (request$) {
     const response$ = dialoguer(request$, rootRef)
 
-    return makeStateObject(response$, ``, getAuth$(rootRef), rootRef)
+    return makeContextObject(response$, ``, getAuth$(rootRef), rootRef)
   }
 }
 
