@@ -73,11 +73,11 @@ Function which takes any of `value`, `child_added`, `child_removed`, `child_chan
 Function which takes a value to the current FirebaseContext.  Returns an object containing the context associated with the pushed value and an observable representing the success/failure of the operation.
 
 #### `.isolate(request$: Observable<FirebaseRequest>): Observable<FirebaseRequest>`
-Function which takes an observable of FirebaseRequests and modifies the location property to be the path associated with the current context
+Function which takes an observable of `FirebaseRequest` objects and modifies the location property to be the path associated with the current context
 
 #### `.isolated$: Observable<FirebaseResponse>`
 Similar to `response$` from above, except all responses that aren't from the path associated with the current context are filtered out
 
 ## Sink
 #### `request$: Observable<FirebaseRequest>`
-The sink takes an Observable<FirebaseRequest>.  The `isolate` function described above can help append the location to a given request for a given FirebaseContext.
+The sink takes an observable of `FirebaseRequest` objects.  The `isolate` function described above can help append the location to a given request for a given FirebaseContext.
