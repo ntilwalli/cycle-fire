@@ -18,14 +18,14 @@ test("Basic functionality", t => {
   const FBase = driver(input$)
 
   const response$ = FBase.response$
-    .do(x => {console.log(`FBase.response$...`); console.log(x)})
+    //.do(x => {console.log(`FBase.response$...`); console.log(x)})
     .filter(x => x.method === `set`)
     .flatMap(x => x.response$)
     .subscribe(x => {
       t.pass(`Schema updated with set method`)
     })
 
-  const root = FBase.select(`/`).select(`events/e424/core/name`)
+  const root = FBase.select(`/`).select(`events/e424`).select(`/core/name`)
   //console.log(root)
   const rootValue = root.events('value').subscribe(
     x => {

@@ -36,79 +36,6 @@ function getAuth$ (ref) {
   })
 }
 
-function makeStateObject (response$, path, auth$, childRef, filterResponses) {
-  return {
-    response$: filterResponses ? response$.filter(response => response.location === path) : response$,
-    path,
-    auth$: auth$,
-    select: makeRefSelector(childRef, response$),
-    events: makeEventsSelector(childRef),
-    setOutputLocation: request$ => request$.do(request => request.location = path),
-    orderByChild: child => makeStateObject(
-      response$,
-      path,
-      auth$,
-      childRef.orderByChild(child)
-    ),
-    orderByKey: key => makeStateObject(
-      response$,
-      path,
-      auth$,
-      childRef.orderByKey(key)
-    ),
-    orderByValue: value => makeStateObject(
-      response$,
-      path,
-      auth$,
-      childRef.orderByValue(value)
-    ),
-    orderByPriority: priority => makeStateObject(
-      response$,
-      path,
-      auth$,
-      childRef.orderByPriority(priority)
-    ),
-    startAt: start => makeStateObject(
-      response$,
-      path,
-      auth$,
-      childRef.startAt(start)
-    ),
-    endAt: end => makeStateObject(
-      response$,
-      path,
-      auth$,
-      childRef.endAt(end)
-    ),
-    equalTo: val => makeStateObject(
-      response$,
-      path,
-      auth$,
-      childRef.equalTo(val)
-    ),
-    limitToFirst: qty => makeStateObject(
-      response$,
-      path,
-      auth$,
-      childRef.limitToFirst(qty)
-    ),
-    limitToLast: qty => makeStateObject(
-      response$,
-      path,
-      auth$,
-      childRef.limitToLast(qty)
-    ),
-    limit: qty => makeStateObject(
-      response$,
-      path,
-      auth$,
-      childRef.limit(qty)
-    ),
-    push: makePush(childRef)
-  }
-}
-
-
 function dialoguer (request$, baseRef) {
   const refMap = {}
 
@@ -192,6 +119,7 @@ function makeEventsSelector(baseRef) {
         `string representing the event type to listen for.`)
     }
     //console.log(`event selector namespace: ${this.path}`)
+    //console.log(baseRef.toString())
     return observe(baseRef, eventName).share()
   }
 }
@@ -226,7 +154,7 @@ function makeRefSelector(baseRef, response$) {
       throw new Error(`Firebase driver's select() expects the argument to be a ` +
         `string as a relative path`)
     }
-
+    //console.log(`selector ${selector}`)
     let childNamespace
     const splitSelector = selector.trim().split(`/`).filter(x => x !== ``)
     if (splitSelector.length > 0 && splitSelector[0].length > 0) {
@@ -236,13 +164,86 @@ function makeRefSelector(baseRef, response$) {
     }
 
     let path = childNamespace.join(`/`)
+    let relPath = splitSelector.join(`/`)
 
     let childRef = baseRef
-    if (childNamespace.length) {
-      childRef = baseRef.child(path)
+    if (relPath.length) {
+      childRef = baseRef.child(relPath)
     }
 
     return makeStateObject(response$, path, this.auth$, childRef, true)
+  }
+}
+
+function makeStateObject (response$, path, auth$, childRef, filterResponses) {
+  return {
+    response$: filterResponses ? response$.filter(response => response.location === path) : response$,
+    path,
+    auth$: auth$,
+    select: makeRefSelector(childRef, response$),
+    events: makeEventsSelector(childRef),
+    setOutputLocation: request$ => request$.do(request => request.location = path),
+    orderByChild: child => makeStateObject(
+      response$,
+      path,
+      auth$,
+      childRef.orderByChild(child)
+    ),
+    orderByKey: key => makeStateObject(
+      response$,
+      path,
+      auth$,
+      childRef.orderByKey(key)
+    ),
+    orderByValue: value => makeStateObject(
+      response$,
+      path,
+      auth$,
+      childRef.orderByValue(value)
+    ),
+    orderByPriority: priority => makeStateObject(
+      response$,
+      path,
+      auth$,
+      childRef.orderByPriority(priority)
+    ),
+    startAt: start => makeStateObject(
+      response$,
+      path,
+      auth$,
+      childRef.startAt(start)
+    ),
+    endAt: end => makeStateObject(
+      response$,
+      path,
+      auth$,
+      childRef.endAt(end)
+    ),
+    equalTo: val => makeStateObject(
+      response$,
+      path,
+      auth$,
+      childRef.equalTo(val)
+    ),
+    limitToFirst: qty => makeStateObject(
+      response$,
+      path,
+      auth$,
+      childRef.limitToFirst(qty)
+    ),
+    limitToLast: qty => makeStateObject(
+      response$,
+      path,
+      auth$,
+      childRef.limitToLast(qty)
+    ),
+    limit: qty => makeStateObject(
+      response$,
+      path,
+      auth$,
+      childRef.limit(qty)
+    ),
+    push: makePush(childRef)
   }
 }
 
