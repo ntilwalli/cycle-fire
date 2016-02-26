@@ -77,3 +77,6 @@ Function which takes an observable of FirebaseRequests and modifies the location
 
 #### `.isolated$: Observable<FirebaseResponse>`
 Similar to `response$` from above, except all responses that aren't from the path associated with the current context are filtered out
+
+## Sink
+The sink takes an Observable<FirebaseRequest>.  The `isolate` function described above can help append the location to a given request.
