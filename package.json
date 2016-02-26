@@ -1,5 +1,5 @@
 {
-  "name": "cycle-firebase",
+  "name": "cycle-fire",
   "version": "1.0.0",
   "description": "CycleJS driver for Firebase",
   "main": "./dist/index.js",
