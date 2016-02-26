@@ -1,7 +1,7 @@
 #cycle-firebase
 
 An experimental CycleJS driver for [Firebase](https://www.firebase.com) which is modeled on [cyclejs/cycle-dom](https://github.com/cyclejs/dom) in terms of `select` and `events` semantics as well as offering a form of isolation for interacting with Firebase from the perspective of a specific child reference.
-This driver was partly inspired by the one implemented by @dralletje at [dralletje/cycle-firebase], although it uses a significantly different approach.
+This driver was partly inspired by the one implemented by @dralletje at [dralletje/cycle-firebase](https://github.com/dralletje/cycle-firebase), although it uses a significantly different approach.
 
 # Usage Example
 
