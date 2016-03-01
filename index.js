@@ -121,7 +121,7 @@ function dialoguer (request$, baseRef) {
     .map(request => ({
       method: request.method,
       location: request.location,
-      response$: fromCallback(request)
+      observable: fromCallback(request)
     }))
 }
 

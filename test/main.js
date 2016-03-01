@@ -30,7 +30,7 @@ test("Basic functionality", t => {
   const response$ = root.isolated$
     //.do(x => {console.log(`FBase.response$...`); console.log(x)})
     .filter(x => x.method === `set`)
-    .flatMap(x => x.response$)
+    .flatMap(x => x.observable)
     .subscribe(x => {
       t.pass(`Schema updated with set method`)
     })
