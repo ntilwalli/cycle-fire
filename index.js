@@ -49,17 +49,28 @@ function dialoguer (request$, baseRef) {
       switch (request.method) {
         case 'set':
         case 'update':
+          ref[request.method](
+            request.data,
+            error => {
+              if (error) {
+                observer.onError(error)
+              } else {
+                observer.onCompleted()
+              }
+            }
+          )
+          break
         case 'authWithCustomToken':
         case 'authWithPassword':
         case 'authWithOAuthPopup':
         case 'authWithOAuthRedirect':
           ref[request.method](
             request.data,
-            x => {
-              if (x instanceof Error) {
-                observer.onError(x)
+            (error, data) => {
+              if (error) {
+                observer.onError(error)
               } else {
-                observer.onNext(x)
+                observer.onNext(data)
                 observer.onCompleted()
               }
             }
@@ -69,11 +80,11 @@ function dialoguer (request$, baseRef) {
         case 'authAnonymously':
         case 'remove':
           ref[request.method](
-            x => {
-              if (x instanceof Error) {
-                observer.onError(x)
+            (error, data) => {
+              if (error) {
+                observer.onError(error)
               } else {
-                observer.onNext(x)
+                observer.onNext(data)
                 observer.onCompleted()
               }
             }
@@ -83,11 +94,11 @@ function dialoguer (request$, baseRef) {
         case 'authWithOAuthToken':
           ref[request.method](
             ...request.data,
-            x => {
-              if (x instanceof Error) {
-                observer.onError(x)
+            (error, data) => {
+              if (error) {
+                observer.onError(error)
               } else {
-                observer.onNext(x)
+                observer.onNext(data)
                 observer.onCompleted()
               }
             }
