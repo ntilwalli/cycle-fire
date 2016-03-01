@@ -47,6 +47,9 @@ function dialoguer (request$, baseRef) {
       }
 
       switch (request.method) {
+        case 'unauth':
+          ref[request.method]()
+          break
         case 'set':
         case 'update':
           ref[request.method](
