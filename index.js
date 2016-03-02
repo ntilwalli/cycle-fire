@@ -108,6 +108,8 @@ function dialoguer (request$, baseRef) {
           )
 
           break
+        default:
+          throw new Error(`Unknown method: ${request.method}`)
       }
 
     })
@@ -272,7 +274,7 @@ function makeFirebaseDriver (urlOrRef) {
   }
 
   return function firebaseDriver (request$) {
-    const response$ = dialoguer(request$, rootRef)
+    const response$ = dialoguer(request$, rootRef).share()
 
     return makeContextObject(response$, ``, getAuth$(rootRef), rootRef)
   }
